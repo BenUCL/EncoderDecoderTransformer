@@ -51,7 +51,8 @@
 
 ## 🚀 Quick Demo
 
-1. **Download our trained model checkpoint** (<3 MB):  
+1. **Follow the set up instructions above**
+2. **Download our trained model checkpoint** (<3 MB):  
    [Google Drive link](https://drive.google.com/file/d/1hT5eCMmYlrDz0ZKNsQwgbBgDyISyv4LH/view?usp=sharing)
 
    Save it as:
