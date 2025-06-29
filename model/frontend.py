@@ -6,7 +6,7 @@ import pickle
 from PIL import Image
 from types import SimpleNamespace
 
-from image_grid_dataset import Combine
+from image_grid_dl import Combine
 from patch_and_embed import image_to_patch_columns
 from transformer import Transformer
 from decoder import IDX2TOKEN, TOKEN2IDX
@@ -36,7 +36,7 @@ MODEL_CONFIG = SimpleNamespace(**{
     "dec_cross_num_heads": 8,
 })
 
-MODEL_WEIGHTS = os.path.join(os.path.dirname(__file__), "model_weights", "enc_dec_final_epoch2025-06-27_14-14-01.pth")
+MODEL_WEIGHTS = os.path.join(os.path.dirname(__file__), "..", "checkpoints", "enc_and_dec", "final_model.pth")
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "MNIST", "raw", "mnist_testset.pkl")
 
 def load_mnist():

@@ -8,7 +8,7 @@ import os
 import pickle
 import wandb
 import tqdm
-from image_grid_dataset import Combine
+from image_grid_dl import Combine
 from patch_and_embed import image_to_patch_columns
 from encoder import TransformerEncoder
 from transformer import Transformer
@@ -41,7 +41,6 @@ SWEEP_CONFIG = {
   }
 }
 
-#TODO: add eval 
 TOKEN2IDX = {
   "0": 0,
   "1": 1,
@@ -165,6 +164,7 @@ def train() -> None:
         val_ds,
         batch_size=wandb.config.batch_size,
         shuffle=False)
+    # TODO implement final test set loader
     # test_loader = DataLoader(
     #     test_ds,
     #     batch_size=wandb.config.batch_size,
@@ -404,19 +404,3 @@ if __name__ == "__main__":
     else:
         # Run single training
         train()
-
-
-
-
-
-
-# TODO:
-# data loaders (images and tokens)
-# call model
-# set up optimiser
-# train loop: for epoch in epochs
-    # pass model data (images and tokens)
-    # calc loss and accuracy/other metrics
-    # optimiser
-    # backprop
-# save model here or during epochs

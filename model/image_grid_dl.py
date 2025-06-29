@@ -1,24 +1,12 @@
-#
-#
-#
 import torch
 import torchvision as tv
 import matplotlib.pyplot as plt
 import random
 import einops
-import numpy as np
 
-
-#
-#
-#
 torch.manual_seed(47)
 random.seed(47)
 
-
-#
-#
-#
 class Combine(torch.utils.data.Dataset):
   def __init__(self, fullset=None, train=True):
     super().__init__()
@@ -47,32 +35,6 @@ class Combine(torch.utils.data.Dataset):
     patch = einops.rearrange(combo, '(h ph) (w pw) -> (h w) ph pw', ph=14, pw=14)
     return combo, patch, torch.tensor(labels)
   
-# class MultiIndexBatchLoader(torch.utils.data.IterableDataset):
-#     def __init__(self, dataset, batch_size=8):
-#         super().__init__()
-#         self.dataset = dataset
-#         self.batch_size = batch_size
-#         self.length = len(dataset) // batch_size
-
-#     def __len__(self):
-#         return self.length
-
-#     def __iter__(self):
-#         indices = np.arange(len(self.dataset))
-#         np.random.shuffle(indices)
-#         for i in range(0, len(indices) - 4 * self.batch_size + 1, 4 * self.batch_size):
-#             batch = []
-#             for j in range(self.batch_size):
-#                 idxs = indices[i + 4*j : i + 4*(j+1)]
-#                 if len(idxs) == 4:
-#                     batch.append(self.dataset[list(idxs)])
-#             if len(batch) == self.batch_size:
-#                 yield batch
-
-
-#
-#
-#
 if __name__ == "__main__":
 
   ds = Combine()

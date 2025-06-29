@@ -15,23 +15,22 @@
   </div>
 
   <div style="flex: 1;">
-    <img src="misc/figure.png" width="50%" alt="Transformer schematic" />
+    <img src="misc/figure.png" width="100%" alt="Transformer schematic" />
   </div>
 
 </div>
 
+Our team hand‑coded multi‑head attention, positional encodings, masking, and both encoder & decoder stacks. It *hurt* … but it works! 🎉
+
 ---
 
-## 📦 Setup
+## 📦 Setup
 
-> Tested on Ubuntu 24.04 + Python 3.10 + CUDA 12. Replace paths if you prefer a different install location.
+> Tested on Ubuntu 24.04 + Python 3.10 + CUDA 12. Replace paths if you prefer a different install location.
 
-1. **Install Miniconda + Mamba (1-liner):**
+1. **Install Miniconda + Mamba (1‑liner):**
    ```bash
-   curl -sS https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh \
-     && bash miniconda.sh -b -p "$HOME/miniconda" \
-     && eval "$(~/miniconda/bin/conda shell.bash hook)" \
-     && conda install -y -n base -c conda-forge mamba
+   curl -sS https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh      && bash miniconda.sh -b -p "$HOME/miniconda"      && eval "$(~/miniconda/bin/conda shell.bash hook)"      && conda install -y -n base -c conda-forge mamba
    ```
 2. **Create & activate the env:**
    ```bash
@@ -49,17 +48,17 @@
 
 ---
 
-## 🚀 Quick Demo
+## 🚀 Quick Demo
 
-1. **Download our trained model checkpoint** (<3 MB):  
-   [Google Drive link](https://drive.google.com/file/d/1hT5eCMmYlrDz0ZKNsQwgbBgDyISyv4LH/view?usp=sharing)
+1. **Download the trained checkpoint** (<3 MB):  
+   [Google Drive link](https://drive.google.com/file/d/1hT5eCMmYlrDz0ZKNsQwgbBgDyISyv4LH/view?usp=sharing)
 
    Save it as:
    ```text
    checkpoints/enc_and_dec/final_model.pth
    ```
 
-2. **Launch the Streamlit front-end:**
+2. **Launch the Streamlit front‑end:**
    ```bash
    streamlit run model/frontend.py
    ```
@@ -68,64 +67,62 @@
      <img src="misc/frontend.png" width="700" alt="Streamlit demo" />
    </p>
 
-   The app previews unseen 2 × 2 MNIST grids from the held-out test set, then shows the model’s predicted digit sequence.
+   The app previews unseen 2 × 2 MNIST grids from the held‑out test set, then shows the model’s predicted digit sequence.
 
 ---
 
-## 📋 Dataset Info
+## 📋 Dataset Info
 
 | Split | Images | Notes |
 |-------|--------|-------|
-| **train** | 50 000 | Standard MNIST digits (single 28 × 28) |
-| **val**   | 10 000 | Held-out MNIST digits for hyperparameter selection|
-| **test** | 10 000 | Test dataset held out for the demo|
-| **grid**  | 60 000 → 15 000 | Each sample is a 56 × 56 image made by tiling 4 random digits taken from the respetive dataset; target = 4-digit sequence |
+| **train** | 50 000 | Standard MNIST digits (single 28 × 28) |
+| **val**   | 10 000 | Held‑out MNIST digits |
+| **grid**  | 60 000 → 15 000 | Each sample is a 56 × 56 image made by tiling 4 random digits; target = 4‑digit sequence |
 
-The helper `model/image_grid_dl.py` builds the grid dataset on-the-fly and yields `(grid_img, target_seq)` pairs.
+The helper `model/image_grid_dl.py` builds the grid dataset on‑the‑fly and yields `(grid_img, target_seq)` pairs.
 
 ---
 
-## 🔡 Patch & Positional Encoding
+## 🔡 Patch & Positional Encoding
 
-* **`patch_and_embed.py`** slices 56 × 56 grids into *16 patches* (14 × 14 each) → flattens & projects to *D = 128*.
+* **`patch_and_embed.py`** slices 56 × 56 grids into *16 patches* (14 × 14 each) → flattens & projects to *D = 128*.
 * A learnable `[CLS]` vector is prepended so the encoder can output a single grid embedding.
 * Trainable positional embeddings are added to both encoder patch tokens and decoder input tokens.
 
 ---
 
-## 🧠 Model Overview (high-level)
+## 🧠 Model Overview (high‑level)
 
 | Component | File | Purpose |
 |-----------|------|---------|
-| **EncoderOnly** | `model/encoder_only.py` | Baseline MNIST classifier (98 % val acc) |
-| **Encoder** | `model/encoder.py` | 6 layers, 8-head MH-Attention, FFN, residual + LN |
-| **Decoder** | `model/decoder.py` | 6 layers with causal mask, cross-attention to encoder out |
-| **Transformer** | `model/transformer.py` | Wraps encoder + decoder → predicts sequence logits |
+| **EncoderOnly** | `model/encoder_only.py` | Baseline MNIST classifier (98 % val acc) |
+| **Encoder** | `model/encoder.py` | 6 layers, 8‑head MH‑Attention, FFN, residual + LN |
+| **Decoder** | `model/decoder.py` | 6 layers with causal mask, cross‑attention to encoder out |
+| **Transformer** | `model/transformer.py` | Wraps encoder + decoder → predicts sequence logits |
 
-> Loss = sum of cross-entropy over sequence positions.
+> Loss = sum of cross‑entropy over sequence positions.
 
 ---
 
-## 🏋️ Training
+## 🏋️ Training
 
-### 1. Encoder-only classifier
-We trained a simple single digit classifier as a first step
+### 1. Encoder‑only classifier (sanity check)
 ```bash
 python model/train_enc.py
 ```
-*Logs to WandB; hits ~98 % val accuracy after 3 epochs on RTX 4060-8 GB.*
+*Logs to WandB; hits ~98 % val accuracy after 3 epochs on RTX 4060‑8 GB.*
 
-### 2. Full Encoder-Decoder
+### 2. Full Encoder‑Decoder
 ```bash
 python model/train_enc_dec.py
 ```
-*Uses `model/image_grid_dl.py` (2 × 2 grids).  
+*Uses `model/image_grid_dl.py` (2 × 2 grids).  
 Checkpoints saved to `checkpoints/enc_and_dec/`.  
-Best val seq-accuracy ≈ 93 % in 15 epochs.*
+Best val seq‑accuracy ≈ 93 % in 15 epochs.*
 
 ---
 
-## 🌐 Inference Pipeline
+## 🌐 Inference Pipeline
 
 ```python
 from model.transformer import Transformer
@@ -145,29 +142,31 @@ print("Predicted seq:", pred)  # e.g. [3, 7, 1, 8]
 
 ---
 
-## 📝 Useful Notebooks / Scripts
+## 📝 Useful Notebooks / Scripts
 
 | Path | Description |
 |------|-------------|
+| `notebooks/transformer_walkthrough.ipynb` | Step‑by‑step MH‑Attention build *(WIP)* |
 | `misc/download_data.py` | Downloads MNIST + pickles train/val splits |
 | `misc/gpu_test.py` | Tiny CUDA sanity check |
 
 ---
 
-## 📚 Citation
-> Vaswani *et al.* 2017. **Attention Is All You Need**.
+## 📚 Citation
+
+> LeCun *et al.* 1998. **Gradient‑Based Learning Applied to Document Recognition**.  
+> Vaswani *et al.* 2017. **Attention Is All You Need**.
 
 ---
 
-## 🗂 Directory Structure (trimmed)
+## 🗂 Directory Structure (trimmed)
 
 ```
 .
-├── checkpoints/                # Saved models (git-ignored)
+├── checkpoints/                # Saved models (git‑ignored)
 │   └── enc_and_dec/
 │       └── final_model.pth
-├── data/                       # MNIST raw & pickles (git-ignored)
-│   ├── raw/                    # pickle locations
+├── data/                       # MNIST raw & pickles (git‑ignored)
 │   └── MNIST/
 ├── env.yml                     # Conda/Mamba environment
 ├── misc/
@@ -186,3 +185,12 @@ print("Predicted seq:", pred)  # e.g. [3, 7, 1, 8]
 │   └── train_enc_dec.py
 └── README.md                   # You are here
 ```
+
+---
+
+## 💡 Next Steps
+
+1. Add beam‑search decoding to improve sequence accuracy.
+2. Try 3 × 3 or random‑sized digit mosaics.
+3. Replace learned positional encodings with rotary (RoPE) and compare.
+4. Swap the brute‑force decoder with a lightweight **Perceiver IO** variant.
