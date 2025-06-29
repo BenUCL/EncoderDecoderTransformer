@@ -79,7 +79,7 @@
 | **train** | 50 000 | Standard MNIST digits (single 28 × 28) |
 | **val**   | 10 000 | Held-out MNIST digits for hyperparameter selection|
 | **test** | 10 000 | Test dataset held out for the demo|
-| **grid**  | 60 000 → 15 000 | Each sample is a 56 × 56 image made by tiling 4 random digits taken from the respetive dataset; target = 4-digit sequence |
+| **grid**  | Randomly generared | Each sample is a 56 × 56 image made by tiling 4 random digits taken from the respective dataset; target = 4-digit sequence |
 
 The helper `model/image_grid_dl.py` builds the grid dataset on-the-fly and yields `(grid_img, target_seq)` pairs.
 
